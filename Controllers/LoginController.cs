@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using WalkInDrive.Models;
 
 namespace WalkInDrive.Controllers
@@ -16,7 +17,7 @@ namespace WalkInDrive.Controllers
             _dbContext = dbContext;
 
         }
-        [HttpPost("user/Add", Name = "CreateNewUser")]
+        [HttpPost("add", Name = "CreateNewUser")]
         public async Task<ActionResult> CreateNewUser([FromBody] User user)
         {
             if (user == null)
@@ -30,11 +31,42 @@ namespace WalkInDrive.Controllers
             return Ok();
         }
 
-        [HttpPost("user/edu/add", Name = "AddEduDetails")]
+        [HttpPost("tech_fam/add", Name = "AddTechFamilliar")]
+        public async Task<ActionResult> AddTechFamilliar([FromBody] technology_familliar tf)
+        {
+            if (tf == null)
+            {
+                return BadRequest();
+            }
+
+            await _dbContext.technology_famillier.AddAsync(tf);
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("tech_exp/add", Name = "AddTechExpertise")]
+        public async Task<ActionResult> AddTechExpertise([FromBody] technology_expert te)
+        {
+            if (te == null)
+            {
+                return BadRequest();
+            }
+
+            await _dbContext.technology_expertise.AddAsync(te);
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+
+
+        [HttpPost("edu/add", Name = "AddEduDetails")]
         public async Task<ActionResult> AddEduDetails([FromBody] EducationDetail educationDetail)
         {
             if (educationDetail == null)
             {
+                Console.WriteLine("hbch");
                 return BadRequest();
             }
 
@@ -44,7 +76,7 @@ namespace WalkInDrive.Controllers
             return Ok();
         }
 
-        [HttpPost("user/prof/add", Name = "AddProfDetails")]
+        [HttpPost("prof/add", Name = "AddProfDetails")]
         public async Task<ActionResult> AddProfDetails([FromBody] ProfessionalDetail professionalDetail)
         {
             if (professionalDetail == null)
@@ -90,22 +122,7 @@ namespace WalkInDrive.Controllers
             return Ok(users_prof);
         }
 
-        [HttpGet]
-        [Route("{Id}", Name = "GetUserByUserId")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-
-        public async Task<ActionResult<Object>> GetUserByUserid(int Id)
-        {
-            var user = await _dbContext.Users.Where(u => u.UserId == Id).FirstOrDefaultAsync();
-            var userEdu = await _dbContext.Users.Where(e => e.UserId == Id).FirstOrDefaultAsync();
-            var userprof = await _dbContext.Users.Where(p => p.UserId == Id).FirstOrDefaultAsync();
-
-            if (user == null || userEdu == null || userprof == null)
-                BadRequest();
-
-            return Ok(new {user, userEdu, userprof});
-        }
+        
 
         [HttpPost]
         [Route("{email}", Name = "GetUserByEmail")]

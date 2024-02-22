@@ -61,6 +61,8 @@ public partial class MydbContext : DbContext
 
         modelBuilder.Entity<technology_familliar>().HasKey(m => new { m.professional_details_work_id, m.technology_id });
 
+       // modelBuilder.Entity<DriveAvailableSlot>().HasKey(m => new { m.SlotsId, m.WalkInDrivesDriveId });
+
         modelBuilder.Entity<DriveApplied>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");

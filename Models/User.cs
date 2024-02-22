@@ -19,7 +19,7 @@ public partial class User
 
     public string Phone { get; set; } = null!;
 
-    public sbyte GetUpdate { get; set; }
+    public int GetUpdate { get; set; }
 
     public byte[] Resume { get; set; } = null!;
 
@@ -27,9 +27,9 @@ public partial class User
 
     public string ReferredPersonName { get; set; } = null!;
 
-    public DateTime DtCreated { get; set; }
+    public DateTime? DtCreated { get; set; }
 
-    public DateTime DtModified { get; set; }
+    public DateTime? DtModified { get; set; }
 
     public virtual ICollection<DriveApplied>? DriveApplieds { get; set; } = new List<DriveApplied>();
 

@@ -62,6 +62,36 @@ namespace WalkInDrive.Controllers
         }
 
         [HttpGet]
+        [Route("timeslots")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<Slot>> GetAllTimeSlots()
+        {
+            var slots = await _dbContext.Slots.ToListAsync();
+
+            if(slots == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(slots);
+        }
+
+        [HttpGet]
+        [Route("timeslotsbydriveId/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<DriveAvailableSlot>> DrivesHasSlots(int id)
+        {
+            var slots = await _dbContext.DriveAvailableSlots.Where(tp => tp.WalkInDrivesDriveId == id).ToListAsync();
+
+            if (slots == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(slots);
+        }
+
+        [HttpGet]
         [Route("{Name}", Name = "GetStudentByName")]
         public ActionResult<WalkInDrife> GetDriveByName(string Name)
         {
@@ -124,6 +154,38 @@ namespace WalkInDrive.Controllers
         public async Task<ActionResult<IEnumerable<PreRequisite>>> GetPrerequisite()
         {
             var prerequisite = await _dbContext.PreRequisites.ToListAsync();
+
+            if (prerequisite == null)
+            {
+                BadRequest();
+            }
+
+            return Ok(prerequisite);
+        }
+
+        [HttpGet]
+        [Route("driveapplied")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<DriveApplied>>> getDriveApplied()
+        {
+            var prerequisite = await _dbContext.DriveApplieds.ToListAsync();
+
+            if (prerequisite == null)
+            {
+                BadRequest();
+            }
+
+            return Ok(prerequisite);
+        }
+
+        [HttpGet]
+        [Route("driveappliedhasRoles")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<drive_applied_has_job_roles>>> driveappliedhasRoles()
+        {
+            var prerequisite = await _dbContext.roles_has_drive_applied.ToListAsync();
 
             if (prerequisite == null)
             {
