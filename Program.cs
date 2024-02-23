@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using WalkInDrive.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +21,25 @@ builder.Services.AddCors(options => options.AddPolicy("myTestPolicy", policy =>
     policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
 }));
 
+var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
+var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+ .AddJwtBearer(options =>
+ {
+     options.TokenValidationParameters = new TokenValidationParameters
+     {
+         ValidateIssuer = true,
+         ValidateAudience = true,
+         ValidateLifetime = true,
+         ValidateIssuerSigningKey = true,
+         ValidIssuer = jwtIssuer,
+         ValidAudience = jwtIssuer,
+         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+     };
+ });
+//Jwt configuration ends here
+
 var app = builder.Build();
 
 
@@ -32,7 +54,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("myTestPolicy");
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

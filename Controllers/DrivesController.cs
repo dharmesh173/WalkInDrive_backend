@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,6 +7,7 @@ using WalkInDrive.Models;
 
 namespace WalkInDrive.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DrivesController : ControllerBase
@@ -16,7 +18,7 @@ namespace WalkInDrive.Controllers
         {
             _dbContext = dbContext;
         }
-
+      
         [HttpGet]
         [Route("techs")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -32,7 +34,7 @@ namespace WalkInDrive.Controllers
             
             return Ok(technologies);
         }
-
+        
         [HttpGet]
         [Route("drives")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -213,6 +215,26 @@ namespace WalkInDrive.Controllers
 
 
             return Ok(rolesIds);
+        }
+
+        [HttpGet]
+        [Route("slotnamebyid/{id}", Name = "slotnamebyid")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> slotnamebyid(int id)
+        {
+            var slot = await _dbContext.Slots.Where(n => n.Id == id).ToListAsync();
+            /*
+            var rolesIds = await _dbContext.WalkInDrives.Include(t => t.Roles).ToListAsync();
+            */
+            if (slot == null)
+            {
+                BadRequest();
+            }
+
+
+
+            return Ok(slot);
         }
 
         [HttpPost("drive/driveapplied/Add", Name = "AddtoDriveapplied")]

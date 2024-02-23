@@ -1,7 +1,12 @@
 ﻿namespace WalkInDrive.Models
 {
-    public class temp
+    public class LoginInfo
     {
-        public string Name { get; set; }
+        public LoginInfo() { }
+
+        
+        public string Email { get; set; }
+
+        public string Password { get; set; }
     }
 }
