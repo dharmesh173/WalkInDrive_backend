@@ -129,13 +129,13 @@ namespace WalkInDrive.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public async Task<ActionResult<User>> GetUserByEmail(String email)
+        public async Task<ActionResult<Object>> GetUserByEmail(String email)
         {
             var user = await _dbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
             if (user == null)
                 BadRequest();
-             
-            return Ok(user);
+            var res = new { user_id = user.UserId };
+            return Ok(res);
         }
 
     }

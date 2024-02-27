@@ -7,7 +7,6 @@ using WalkInDrive.Models;
 
 namespace WalkInDrive.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DrivesController : ControllerBase
@@ -34,7 +33,8 @@ namespace WalkInDrive.Controllers
             
             return Ok(technologies);
         }
-        
+
+        [Authorize]
         [HttpGet]
         [Route("drives")]
         [ProducesResponseType(StatusCodes.Status200OK)]
